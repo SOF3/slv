@@ -1,0 +1,17 @@
+[package]
+name = "slv-proto"
+authors = ["SOFe <sofe2038@gmail.com>"]
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/SOF3/yankd"
+homepage = "https://github.com/SOF3/yankd"
+description = "WebSocket protocol for SLV"
+license = "Apache-2.0"
+
+[dependencies]
+serde = {version = "1.0.143", features = ["derive", "rc"]}
+rmp-serde = "1.1.0"
+thiserror = "1.0.31"
+arcstr = {version = "1.1.4", features = ["serde"]}
+
+[features]

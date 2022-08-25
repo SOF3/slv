@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "input",
+    "proto",
+	"server",
+	"cmd",
+]
