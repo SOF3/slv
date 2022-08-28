@@ -3,8 +3,8 @@ name = "slv-proto"
 authors = ["SOFe <sofe2038@gmail.com>"]
 version = "0.1.0"
 edition = "2021"
-repository = "https://github.com/SOF3/yankd"
-homepage = "https://github.com/SOF3/yankd"
+repository = "https://github.com/SOF3/slv"
+homepage = "https://github.com/SOF3/slv"
 description = "WebSocket protocol for SLV"
 license = "Apache-2.0"
 

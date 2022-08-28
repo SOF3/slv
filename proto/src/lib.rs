@@ -30,6 +30,7 @@ pub mod server {
     pub enum Message {
         HandshakeOk(HandshakeOk),
         UpdateKeyList(Vec<IndexMethod>),
+        StatusFeed(StatusFeed),
     }
 
     #[derive(Serialize, Deserialize)]
@@ -38,6 +39,12 @@ pub mod server {
     #[derive(Serialize, Deserialize)]
     pub struct IndexList {
         indices: Vec<IndexMethod>,
+    }
+
+    #[derive(Serialize, Deserialize)]
+    pub struct StatusFeed {
+        file_name:      String,
+        lines_in_index: u64,
     }
 }
 

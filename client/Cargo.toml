@@ -1,40 +1,24 @@
 [package]
-name = "slv-input"
+name = "slv-client"
 authors = ["SOFe <sofe2038@gmail.com>"]
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/SOF3/slv"
 homepage = "https://github.com/SOF3/slv"
-description = "WebSocket server for SLV"
+description = "Generalized library for slv clients"
 license = "Apache-2.0"
 
 [dependencies]
 arcstr = {version = "1.1.4", features = ["serde"]}
-clap = {version = "3.2.8", features = ["derive"]}
-crossbeam = "0.8.2"
 futures = "0.3.21"
-humantime = "2.1.0"
-inotify = "0.10.0"
 log = "0.4.17"
-parking_lot = "0.12.1"
-rand = "0.8.5"
-serde = {version = "1.0.143", features = ["derive", "rc"]}
-serde_json = "1.0.83"
 thiserror = "1.0.31"
+parking_lot = "0.12.1"
+arc-swap = "1.5.1"
 
 [dependencies.tokio]
 version = "1.19.2"
 default-features = false
-features = [
-    "fs",
-    "io-std",
-    "io-util",
-    "net",
-    "rt-multi-thread",
-    "signal",
-    "sync",
-    "time",
-]
 
 [dependencies.slv-proto]
 version = "0.1.0"

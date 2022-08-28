@@ -3,17 +3,19 @@ name = "slv"
 authors = ["SOFe <sofe2038@gmail.com>"]
 version = "0.1.0"
 edition = "2021"
-repository = "https://github.com/SOF3/yankd"
-homepage = "https://github.com/SOF3/yankd"
+repository = "https://github.com/SOF3/slv"
+homepage = "https://github.com/SOF3/slv"
 description = "Structured log viewer"
 license = "Apache-2.0"
 
 [dependencies]
+atty = "0.2.14"
 clap = {version = "3.2.8", features = ["derive"]}
+env_logger = "0.9.0"
 futures = "0.3.21"
 log = "0.4.17"
 thiserror = "1.0.31"
-tui = "0.19.0"
+simplelog = "0.12.0"
 
 [dependencies.tokio]
 version = "1.19.2"
@@ -30,3 +32,9 @@ path = "../input"
 [dependencies.slv-server]
 version = "0.1.0"
 path = "../server"
+
+[dependencies.slv-tui]
+version = "0.1.0"
+path = "../tui"
+
+[features]

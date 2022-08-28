@@ -4,11 +4,12 @@ use std::sync::Arc;
 use tokio::sync::broadcast;
 
 pub mod index;
+pub mod session;
 mod source;
 
 pub async fn init(
     options: Options,
-    shutdown_tx: &broadcast::Sender<()>,
+    shutdown: broadcast::Receiver<()>,
 ) -> Result<(Arc<index::Store>, impl Future<Output = ()>), InitError> {
     let store = Arc::new(index::Store::new(options.index));
     let input = source::init(
@@ -17,7 +18,7 @@ pub async fn init(
             let store = Arc::clone(&store);
             move |message| store.push(message)
         },
-        shutdown_tx.subscribe(),
+        shutdown,
     )
     .await?;
 
@@ -27,9 +28,9 @@ pub async fn init(
 #[derive(clap::Parser)]
 pub struct Options {
     #[clap(flatten)]
-    index:  index::Options,
+    pub index:  index::Options,
     #[clap(flatten)]
-    source: source::Options,
+    pub source: source::Options,
 }
 
 #[derive(Debug, thiserror::Error)]

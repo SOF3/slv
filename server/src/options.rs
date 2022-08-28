@@ -24,7 +24,7 @@ pub struct Options {
     ///
     /// The auth token is a randomly generated 16-character alphanumeric string
     /// if no value is provided.
-    #[clap(long, value_parser = fill_with_random)]
+    #[clap(long, value_parser = fill_with_random, default_value_t)]
     pub auth_token: String,
 }
 

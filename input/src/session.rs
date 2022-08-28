@@ -1,7 +1,8 @@
 use futures::channel::mpsc;
 use futures::{Sink, SinkExt, Stream, StreamExt as _};
-use slv_input::index;
 use slv_proto::{client, server};
+
+use crate::index;
 
 pub async fn handle(
     stream: impl Stream<Item = client::Message> + Unpin,

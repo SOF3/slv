@@ -6,15 +6,14 @@ use slv_input::index;
 use tokio::sync::broadcast;
 
 mod options;
-mod session;
 mod ws;
 
 pub async fn new(
     options: Options,
-    shutdown_tx: &broadcast::Sender<()>,
+    shutdown: broadcast::Receiver<()>,
     index: Arc<index::Store>,
 ) -> Result<impl Future<Output = ()>, InitError> {
-    let ws = ws::init(options, shutdown_tx.subscribe(), index).await?;
+    let ws = ws::init(options, shutdown, index).await?;
 
     Ok(ws)
 }

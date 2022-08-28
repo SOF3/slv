@@ -3,6 +3,21 @@
 version = 3
 
 [[package]]
+name = "aho-corasick"
+version = "0.7.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e37cfd5e7657ada45f742d6e99ca5788580b5c529dc78faf11ece6dc702656f"
+dependencies = [
+ "memchr",
+]
+
+[[package]]
+name = "arc-swap"
+version = "1.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "983cd8b9d4b02a6dc6ffa557262eb5858a27a0038ffffe21a0f133eaa819a164"
+
+[[package]]
 name = "arcstr"
 version = "1.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -210,6 +225,7 @@ checksum = "e64e6c0fbe2c17357405f7c758c1ef960fce08bdfb2c03d88d2a18d7e09c4b67"
 dependencies = [
  "bitflags",
  "crossterm_winapi",
+ "futures-core",
  "libc",
  "mio",
  "parking_lot",
@@ -245,6 +261,19 @@ checksum = "f2fb860ca6fafa5552fb6d0e816a69c8e49f0908bf524e30a90d97c85892d506"
 dependencies = [
  "block-buffer",
  "crypto-common",
+]
+
+[[package]]
+name = "env_logger"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b2cf0344971ee6c64c31be0d530793fba457d322dfec2810c453d0ef228f9c3"
+dependencies = [
+ "atty",
+ "humantime",
+ "log",
+ "regex",
+ "termcolor",
 ]
 
 [[package]]
@@ -553,6 +582,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "num_threads"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2819ce041d2ee131036f4fc9d6ae7ae125a3a40e97ba64d04fe799ad9dabbb44"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -697,6 +735,23 @@ checksum = "fb5a58c1855b4b6819d59012155603f0b22ad30cad752600aadfcb695265519a"
 dependencies = [
  "bitflags",
 ]
+
+[[package]]
+name = "regex"
+version = "1.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4c4eb3267174b8c6c2f654116623910a0fef09c4753f8dd83db29c48a0df988b"
+dependencies = [
+ "aho-corasick",
+ "memchr",
+ "regex-syntax",
+]
+
+[[package]]
+name = "regex-syntax"
+version = "0.6.27"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a3f87b73ce11b1619a3c6332f45341e0047173771e8b8b73f87bfeefb7b56244"
 
 [[package]]
 name = "ring"
@@ -851,6 +906,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "simplelog"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "48dfff04aade74dd495b007c831cd6f4e0cee19c344dd9dc0884c0289b70a786"
+dependencies = [
+ "log",
+ "termcolor",
+ "time",
+]
+
+[[package]]
 name = "slab"
 version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -860,14 +926,31 @@ checksum = "eb703cfe953bccee95685111adeedb76fabe4e97549a58d16f03ea7b9367bb32"
 name = "slv"
 version = "0.1.0"
 dependencies = [
+ "atty",
  "clap",
+ "env_logger",
  "futures",
  "log",
+ "simplelog",
  "slv-input",
  "slv-server",
+ "slv-tui",
  "thiserror",
  "tokio",
- "tui",
+]
+
+[[package]]
+name = "slv-client"
+version = "0.1.0"
+dependencies = [
+ "arc-swap",
+ "arcstr",
+ "futures",
+ "log",
+ "parking_lot",
+ "slv-proto",
+ "thiserror",
+ "tokio",
 ]
 
 [[package]]
@@ -924,6 +1007,22 @@ dependencies = [
  "tokio-rustls",
  "tokio-tungstenite",
  "tungstenite",
+]
+
+[[package]]
+name = "slv-tui"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "crossterm",
+ "futures",
+ "log",
+ "slv-client",
+ "slv-input",
+ "slv-proto",
+ "thiserror",
+ "tokio",
+ "tui",
 ]
 
 [[package]]
@@ -999,6 +1098,24 @@ dependencies = [
  "quote",
  "syn",
 ]
+
+[[package]]
+name = "time"
+version = "0.3.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c3f9a28b618c3a6b9251b6908e9c99e04b9e5c02e6581ccbb67d59c34ef7f9b"
+dependencies = [
+ "itoa",
+ "libc",
+ "num_threads",
+ "time-macros",
+]
+
+[[package]]
+name = "time-macros"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "42657b1a6f4d817cda8e7a0ace261fe0cc946cf3a80314390b22cc61ae080792"
 
 [[package]]
 name = "tinyvec"

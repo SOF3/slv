@@ -1,7 +1,9 @@
 [workspace]
 members = [
-    "input",
     "proto",
+    "input",
+    "client",
 	"server",
+    "tui",
 	"cmd",
 ]

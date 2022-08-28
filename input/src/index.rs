@@ -196,6 +196,6 @@ pub struct Options {
     /// Maximum number of messages to buffer.
     ///
     /// The oldest messages that exceed the buffer are discarded.
-    #[clap(long, value_parser)]
+    #[clap(long, value_parser, default_value = "1000000")]
     pub buffer_size: usize,
 }

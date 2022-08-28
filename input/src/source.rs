@@ -43,9 +43,7 @@ pub async fn init(
         Input::stream(io::BufReader::new(Box::pin(file)))
     };
 
-    Ok(async move {
-        watch_loop(input, receiver, shutdown).await;
-    })
+    Ok(watch_loop(input, receiver, shutdown))
 }
 
 type InotifyStream = Pin<Box<dyn Stream<Item = io::Result<inotify::EventOwned>> + Send>>;
@@ -196,7 +194,7 @@ pub struct Options {
     #[clap(long = "no-inotify", action = clap::ArgAction::SetFalse)]
     pub inotify:        bool,
     /// The interval to try to read new data from a file, if inotify is unavailable.
-    #[clap(long, value_parser)]
+    #[clap(long, value_parser, default_value_t = Duration::from_millis(10).into())]
     pub watch_interval: humantime::Duration,
 }
 

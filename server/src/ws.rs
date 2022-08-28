@@ -5,12 +5,12 @@ use std::sync::Arc;
 
 use futures::channel::mpsc;
 use futures::{Future, Sink, SinkExt, Stream, StreamExt};
-use slv_input::index;
+use slv_input::{index, session};
 use slv_proto::{client, server};
 use tokio::sync::broadcast;
 use tokio::{fs, io, net};
 
-use crate::{session, Options};
+use crate::Options;
 
 pub async fn init(
     options: Options,
@@ -38,7 +38,7 @@ pub async fn init(
             let (stream, addr) = match accept {
                 Ok(ret) => ret,
                 Err(err) => {
-                    log::debug!("Error accepting new client: {err}");
+                    log::warn!("Error accepting new client: {err}");
                     continue;
                 }
             };
@@ -49,6 +49,7 @@ pub async fn init(
                 addr,
                 tls_config,
                 Arc::clone(&index),
+                shutdown.resubscribe(),
             ));
         }
     })
@@ -96,19 +97,20 @@ async fn handle(
     from: SocketAddr,
     tls_config: Option<Arc<rustls::ServerConfig>>,
     index: Arc<index::Store>,
+    shutdown: broadcast::Receiver<()>,
 ) {
     let ret = if let Some(tls_config) = tls_config {
         match tokio_rustls::TlsAcceptor::from(tls_config).accept(stream).await {
-            Ok(tls_stream) => handle_raw(options, tls_stream, from, index).await,
+            Ok(tls_stream) => handle_raw(options, tls_stream, from, index, shutdown).await,
             Err(err) => Err(RunError::Tls(err)),
         }
     } else {
-        handle_raw(options, stream, from, index).await
+        handle_raw(options, stream, from, index, shutdown).await
     };
 
     match ret {
         Ok(never) => match never {},
-        Err(RunError::EndOfStream) => {}
+        Err(RunError::EndOfStream | RunError::Shutdown) => {}
         Err(err) => {
             log::debug!("Error handling connection from {from}: {err}");
         }
@@ -120,6 +122,7 @@ async fn handle_raw(
     stream: impl io::AsyncRead + io::AsyncWrite + Unpin,
     _from: SocketAddr,
     index: Arc<index::Store>,
+    mut shutdown: broadcast::Receiver<()>,
 ) -> Result<Infallible, RunError> {
     let mut sock = tokio_tungstenite::accept_async(stream).await.map_err(RunError::WebSocket)?;
 
@@ -161,6 +164,8 @@ async fn handle_raw(
         return Err(RunError::BadAuthToken);
     }
 
+    send_msg(&mut sock, server::Message::HandshakeOk(server::HandshakeOk {})).await?;
+
     let (send_tx, mut send_rx) = mpsc::unbounded();
     let (mut recv_tx, recv_rx) = mpsc::unbounded();
 
@@ -186,6 +191,9 @@ async fn handle_raw(
                 let message = recv?;
                 _ = recv_tx.send(message).await; // if receiver is dropped, we will handle it in the next iteration during send_rx.next()
             }
+            _ = shutdown.recv() => {
+                break Err(RunError::Shutdown)
+            },
         }
     }
 }
@@ -226,4 +234,6 @@ enum RunError {
     BadAuthToken,
     #[error("End of stream")]
     EndOfStream,
+    #[error("Server shutdown")]
+    Shutdown,
 }
